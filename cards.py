@@ -15,23 +15,22 @@ class Hand:
 
     def __init__(self):
         self.hand = []  # Contains cards as strings
-        self.handValue = 0  # Contains value of hand
 
     def get_card_value(self, card):  # Returns the numerical value of a card
         cardValues = {
             'AL': 1,
-            '2' : 2,
-            '3' : 3,
-            '4' : 4,
-            '5' : 5,
-            '6' : 6,
-            '7' : 7,
-            '8' : 8,
-            '9' : 9,
+            '2': 2,
+            '3': 3,
+            '4': 4,
+            '5': 5,
+            '6': 6,
+            '7': 7,
+            '8': 8,
+            '9': 9,
             '10': 10,
-            'J' : 11,
-            'Q' : 12,
-            'K' : 13,
+            'J': 11,
+            'Q': 12,
+            'K': 13,
             'AH': 11
         }
         return cardValues[card]
