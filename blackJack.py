@@ -8,12 +8,11 @@ def draw_card(Deck, Hand):
     Hand.hand.append(newCard)
 
 
-def take_turn(Deck, Hand):
+def player_turn(Deck, Hand):
     print('Cards: | ' + ' | '.join(Hand.hand) + ' |')
     print('Total = ' + str(Hand.get_hand_value(Hand.hand)))
     choice = input('Hit or Stay?')
 
-    # TODO: Test this section
     while choice.lower() != 'hit' or choice.lower() != 'stay':
         choice = input('Hit or Stay?')
     while choice.lower() == 'hit':
@@ -23,6 +22,9 @@ def take_turn(Deck, Hand):
         choice = input('Hit or Stay?')
     if choice.lower() == 'stay':
         print('Staying at ' + str(Hand.get_hand_value()))
+
+
+def dealer_turn()
 
 
 def busted(Hand):
@@ -51,6 +53,15 @@ def main():  # This will be the game loop
         # Player's turn
         take_turn(gameDeck, playerHand)
 
+
+    if busted(playerHand) == True:
+        play = ''
+        while play.lower() != 'yes' or play.lower() != 'no':
+            play = input('Bust! Play again?')
+        if play.lower() == 'no':
+            print('Game over. Thanks for playing!')
+        elif play.lower() == 'yes':
+            main()
 
 if __name__ == "__main__":  # Initiate main loop when run as script
     main()
