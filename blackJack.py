@@ -1,7 +1,8 @@
 from cards import *
+import time
 
-# Functions receive objects, not attributes contained within objects, as parameters.
-# The attributes are called accordingly within each function.
+# Functions receive objects as arguments. Their attributes and methods are called accordingly within each function.
+# DO NOT pass attributes into functions, except when it is a function defined in another module.
 
 def draw_card(Deck, Hand):
     newCard = Deck.deck.pop()
@@ -11,30 +12,61 @@ def draw_card(Deck, Hand):
 def player_turn(Deck, Hand):
     print('Cards: | ' + ' | '.join(Hand.hand) + ' |')
     print('Total = ' + str(Hand.get_hand_value(Hand.hand)))
-    choice = input('Hit or Stay?')
+    print('Hit or Stay?')
+    choice = input().lower()
 
-    while choice.lower() != 'hit' or choice.lower() != 'stay':
-        choice = input('Hit or Stay?')
-    while choice.lower() == 'hit':
-        draw_card(Deck.deck, Hand.hand)
-        print('Cards: | ' + ' | '.join(Hand.hand) + ' |')
-        print('Total = ' + str(Hand.get_hand_value(Hand.hand)))
-        choice = input('Hit or Stay?')
-    if choice.lower() == 'stay':
-        print('Staying at ' + str(Hand.get_hand_value()))
+    while choice != 'hit' and choice != 'stay':
+        print('Hit or Stay?')
+        choice = input().lower()
+
+    if choice == 'hit':
+        draw_card(Deck, Hand)
+        if Hand.get_hand_value(Hand.hand) > 21:
+            busted(Hand)
+        else:
+            player_turn(Deck, Hand)
+    elif choice.lower() == 'stay':
+        print('Staying at ' + str(Hand.get_hand_value(Hand.hand)))
+        return Hand.get_hand_value(Hand.hand)  # Once the player is done hitting and hasn't busted, return score
 
 
-def dealer_turn()
+def dealer_turn(Deck, Hand):
+    print('Dealer shows: | ? | ' + ' | '.join(Hand.hand[1:]) + ' |')
+
+    if Hand.get_hand_value(Hand.hand) < 17:
+        print('Dealer decides to hit')
+        time.sleep(1)
+        draw_card(Deck, Hand)
+        if Hand.get_hand_value(Hand.hand) > 21:
+            busted(Hand)
+        else:
+            dealer_turn(Deck, Hand)
+
+    elif Hand.get_hand_value(Hand.hand) >= 17:
+        if 'A' not in Hand.hand:  # If the dealer has hit at least 17 without an Ace, they stay
+            print('Dealer decides to stay')
+            return Hand.get_hand_value(Hand.hand)
+        elif Hand.hand.count('A') < 2:  # The dealer will be a bit risky if they have one Ace
+            print('Dealer decides to hit')
+            time.sleep(1)
+            dealer_turn(Deck, Hand)
+            if Hand.get_hand_value(Hand.hand) > 21:
+                busted(Hand)
+            else:
+                print('Dealer decides to stay')
+                dealer_turn(Deck, Hand)
+        else:  # If the dealer has 2 or more aces at this point, it's a risk to hit again
+            return Hand.get_hand_value(Hand.hand)
 
 
-def busted(Hand):
+def busted(Hand):  # Handles events if player or dealer busts
     bust = False
     if Hand.get_hand_value(Hand.hand) > 21:
         bust = True
     return bust
 
 
-def main():  # This will be the game loop
+def main():  # Game loop
     print('Starting Black Jack')
 
     # Initialize starting game state
@@ -51,13 +83,21 @@ def main():  # This will be the game loop
 
     while busted(playerHand) == False and busted(dealerHand) == False:  # Main game loop
         # Player's turn
-        take_turn(gameDeck, playerHand)
-
+        print('Dealer shows: | ? | ' + ' | '.join(dealerHand.hand[1:]) + ' |')
+        playerScore = player_turn(gameDeck, playerHand)
+        dealerScore = dealer_turn(gameDeck, dealerHand)
+        if playerScore > dealerScore:
+            # TODO: Create win message
+        elif playerScore < dealerScore:
+            # TODO: Create lose message
+        else:
+            # TODO: Handle a tie
 
     if busted(playerHand) == True:
         play = ''
-        while play.lower() != 'yes' or play.lower() != 'no':
-            play = input('Bust! Play again?')
+        while play.lower() != 'yes' and play.lower() != 'no':
+            print('Bust! Play again?')
+            play = input()
         if play.lower() == 'no':
             print('Game over. Thanks for playing!')
         elif play.lower() == 'yes':

@@ -6,7 +6,7 @@ class Deck:
         self.deck = []  # Write this here so it's specific to the object
 
     def build(self, deck):  # Populates a deck list and shuffles it
-        suit = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        suit = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
         for i in range(5):
             deck.extend(suit)
         shuffle(deck)
